@@ -52,6 +52,20 @@ Aplicar os conceitos estudados em aula envolvendo:
 
 ---
 
+## Modelo Entidade-Relacionamento
+
+O banco é composto por 3 entidades principais:
+- **MEDICO** — cadastro do corpo clínico
+- **PACIENTE** — cadastro de pacientes
+- **CONSULTA** — relaciona médico e paciente com data, status e observação
+
+![Modelo ER](docs/Modelo-ER-Clinica.drawio.png)
+
+## Fluxo da Aplicação
+
+![Fluxograma](docs/Fluxograma-Clinica.drawio.png)
+
+
 <div align="center">
   <sub>Desenvolvido individualmente · Trabalho Final de Disciplina</sub>
 </div>
