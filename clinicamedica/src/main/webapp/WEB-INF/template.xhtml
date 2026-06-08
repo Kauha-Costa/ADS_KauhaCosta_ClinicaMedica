@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Clínica Médica</title>
+    <h:outputStylesheet library="manhattan-layout" name="css/layout-blue-grey.css"/>
+</h:head>
+
+<h:body styleClass="layout-static">
+    <div class="layout-wrapper">
+
+        <!-- TOPBAR -->
+        <div class="layout-topbar">
+            <div class="layout-topbar-left">
+                <h:outputLink value="#{request.contextPath}/admin/medico.xhtml" styleClass="layout-topbar-logo">
+                    <span style="font-size:1.2rem; font-weight:bold; color:white;">🏥 Clínica Médica</span>
+                </h:outputLink>
+            </div>
+            <div class="layout-topbar-right">
+                <h:form>
+                    <p:commandButton value="Sair" action="#{loginController.logout}"
+                                     icon="pi pi-sign-out" styleClass="p-button-text p-button-plain"/>
+                </h:form>
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="layout-sidebar">
+            <div class="layout-menu-container">
+                <ul class="layout-menu">
+                    <li class="layout-menuitem-category">
+                        <span class="layout-menuitem-text">CADASTROS</span>
+                    </li>
+                    <li>
+                        <h:outputLink value="#{request.contextPath}/admin/especialidade.xhtml">
+                            <i class="pi pi-list"/>
+                            <span>Especialidades</span>
+                        </h:outputLink>
+                    </li>
+                    <li>
+                        <h:outputLink value="#{request.contextPath}/admin/medico.xhtml">
+                            <i class="pi pi-user"/>
+                            <span>Médicos</span>
+                        </h:outputLink>
+                    </li>
+                    <li>
+                        <h:outputLink value="#{request.contextPath}/admin/paciente.xhtml">
+                            <i class="pi pi-users"/>
+                            <span>Pacientes</span>
+                        </h:outputLink>
+                    </li>
+                    <li class="layout-menuitem-category">
+                        <span class="layout-menuitem-text">CONSULTAS</span>
+                    </li>
+                    <li>
+                        <h:outputLink value="#{request.contextPath}/admin/consulta.xhtml">
+                            <i class="pi pi-calendar"/>
+                            <span>Consultas</span>
+                        </h:outputLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div class="layout-main">
+            <div class="layout-content">
+                <ui:insert name="content">Conteúdo aqui</ui:insert>
+            </div>
+        </div>
+
+    </div>
+    <h:outputScript library="manhattan-layout" name="js/layout.js"/>
+</h:body>
+</html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/template.xhtml">
+    <ui:define name="content">
+
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:toolbar>
+            <p:toolbarGroup>
+                <p:commandButton value="Novo Médico" icon="pi pi-plus"
+                                 actionListener="#{medicoController.prepareAdicionar}"
+                                 update="formDialog" oncomplete="PF('dlgMedico').show()"/>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <p:dataTable value="#{medicoController.lista}" var="med"
+                     style="margin-top:1rem" paginator="true" rows="10"
+                     emptyMessage="Nenhum médico cadastrado.">
+            <p:column headerText="ID"><h:outputText value="#{med.id}"/></p:column>
+            <p:column headerText="Nome"><h:outputText value="#{med.nome}"/></p:column>
+            <p:column headerText="CRM"><h:outputText value="#{med.crm}"/></p:column>
+            <p:column headerText="Especialidade"><h:outputText value="#{med.especialidade.nome}"/></p:column>
+            <p:column headerText="Email"><h:outputText value="#{med.email}"/></p:column>
+            <p:column headerText="Telefone"><h:outputText value="#{med.telefone}"/></p:column>
+            <p:column headerText="Ações" style="width:120px; text-align:center">
+                <p:commandButton icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
+                                 style="margin-right:4px"
+                                 actionListener="#{medicoController.setMedico(med)}"
+                                 update="formDialog" oncomplete="PF('dlgMedico').show()"/>
+                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                 actionListener="#{medicoController.setMedico(med)}"
+                                 oncomplete="PF('dlgConfirm').show()"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:dialog header="Médico" widgetVar="dlgMedico" modal="true" width="500">
+            <h:form id="formDialog">
+                <p:messages showDetail="true"/>
+                <p:panelGrid columns="2" style="width:100%">
+                    <p:outputLabel value="Nome *"/>
+                    <p:inputText value="#{medicoController.medico.nome}" required="true"/>
+                    <p:outputLabel value="CRM *"/>
+                    <p:inputText value="#{medicoController.medico.crm}" required="true"/>
+                    <p:outputLabel value="Especialidade *"/>
+                    <p:selectOneMenu value="#{medicoController.medico.especialidade}" required="true">
+                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{medicoController.listaEspecialidades}" var="esp"
+                                       itemLabel="#{esp.nome}" itemValue="#{esp}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Email"/>
+                    <p:inputText value="#{medicoController.medico.email}"/>
+                    <p:outputLabel value="Telefone"/>
+                    <p:inputText value="#{medicoController.medico.telefone}"/>
+                </p:panelGrid>
+                <div style="margin-top:1rem; text-align:right">
+                    <p:commandButton value="Salvar" icon="pi pi-check"
+                                     actionListener="#{medicoController.salvar('CREATE')}"
+                                     rendered="#{medicoController.medico.id == null}"
+                                     update=":growl" oncomplete="PF('dlgMedico').hide()"/>
+                    <p:commandButton value="Atualizar" icon="pi pi-check"
+                                     actionListener="#{medicoController.salvar('UPDATE')}"
+                                     rendered="#{medicoController.medico.id != null}"
+                                     update=":growl" oncomplete="PF('dlgMedico').hide()"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="p-button-secondary"
+                                     style="margin-left:4px" onclick="PF('dlgMedico').hide()" type="button"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog widgetVar="dlgConfirm" message="Deseja realmente excluir este médico?"
+                         header="Confirmar Exclusão" severity="warn">
+            <h:form>
+                <p:commandButton value="Sim" icon="pi pi-check" styleClass="p-button-danger"
+                                 actionListener="#{medicoController.salvar('DELETE')}"
+                                 update=":growl" oncomplete="PF('dlgConfirm').hide()"/>
+                <p:commandButton value="Não" icon="pi pi-times" styleClass="p-button-secondary"
+                                 onclick="PF('dlgConfirm').hide()" type="button"/>
+            </h:form>
+        </p:confirmDialog>
+
+    </ui:define>
+</ui:composition>
+</html>

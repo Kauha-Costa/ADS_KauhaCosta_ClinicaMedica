@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/template.xhtml">
+    <ui:define name="content">
+
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:toolbar>
+            <p:toolbarGroup>
+                <p:commandButton value="Novo Paciente" icon="pi pi-plus"
+                                 actionListener="#{pacienteController.prepareAdicionar}"
+                                 update="formDialog" oncomplete="PF('dlgPaciente').show()"/>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <p:dataTable value="#{pacienteController.lista}" var="pac"
+                     style="margin-top:1rem" paginator="true" rows="10"
+                     emptyMessage="Nenhum paciente cadastrado.">
+            <p:column headerText="ID"><h:outputText value="#{pac.id}"/></p:column>
+            <p:column headerText="Nome"><h:outputText value="#{pac.nome}"/></p:column>
+            <p:column headerText="CPF"><h:outputText value="#{pac.cpf}"/></p:column>
+            <p:column headerText="Email"><h:outputText value="#{pac.email}"/></p:column>
+            <p:column headerText="Telefone"><h:outputText value="#{pac.telefone}"/></p:column>
+            <p:column headerText="Convênio"><h:outputText value="#{pac.convenio}"/></p:column>
+            <p:column headerText="Ações" style="width:120px; text-align:center">
+                <p:commandButton icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
+                                 style="margin-right:4px"
+                                 actionListener="#{pacienteController.setPaciente(pac)}"
+                                 update="formDialog" oncomplete="PF('dlgPaciente').show()"/>
+                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                 actionListener="#{pacienteController.setPaciente(pac)}"
+                                 oncomplete="PF('dlgConfirm').show()"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:dialog header="Paciente" widgetVar="dlgPaciente" modal="true" width="500">
+            <h:form id="formDialog">
+                <p:messages showDetail="true"/>
+                <p:panelGrid columns="2" style="width:100%">
+                    <p:outputLabel value="Nome *"/>
+                    <p:inputText value="#{pacienteController.paciente.nome}" required="true"/>
+                    <p:outputLabel value="CPF"/>
+                    <p:inputText value="#{pacienteController.paciente.cpf}"/>
+                    <p:outputLabel value="Data Nascimento"/>
+                    <p:datePicker value="#{pacienteController.paciente.datanascimento}" pattern="dd/MM/yyyy"/>
+                    <p:outputLabel value="Email"/>
+                    <p:inputText value="#{pacienteController.paciente.email}"/>
+                    <p:outputLabel value="Telefone"/>
+                    <p:inputText value="#{pacienteController.paciente.telefone}"/>
+                    <p:outputLabel value="Convênio"/>
+                    <p:inputText value="#{pacienteController.paciente.convenio}"/>
+                </p:panelGrid>
+                <div style="margin-top:1rem; text-align:right">
+                    <p:commandButton value="Salvar" icon="pi pi-check"
+                                     actionListener="#{pacienteController.salvar('CREATE')}"
+                                     rendered="#{pacienteController.paciente.id == null}"
+                                     update=":growl" oncomplete="PF('dlgPaciente').hide()"/>
+                    <p:commandButton value="Atualizar" icon="pi pi-check"
+                                     actionListener="#{pacienteController.salvar('UPDATE')}"
+                                     rendered="#{pacienteController.paciente.id != null}"
+                                     update=":growl" oncomplete="PF('dlgPaciente').hide()"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="p-button-secondary"
+                                     style="margin-left:4px" onclick="PF('dlgPaciente').hide()" type="button"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog widgetVar="dlgConfirm" message="Deseja realmente excluir este paciente?"
+                         header="Confirmar Exclusão" severity="warn">
+            <h:form>
+                <p:commandButton value="Sim" icon="pi pi-check" styleClass="p-button-danger"
+                                 actionListener="#{pacienteController.salvar('DELETE')}"
+                                 update=":growl" oncomplete="PF('dlgConfirm').hide()"/>
+                <p:commandButton value="Não" icon="pi pi-times" styleClass="p-button-secondary"
+                                 onclick="PF('dlgConfirm').hide()" type="button"/>
+            </h:form>
+        </p:confirmDialog>
+
+    </ui:define>
+</ui:composition>
+</html>
