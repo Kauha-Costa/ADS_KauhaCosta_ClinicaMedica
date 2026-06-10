@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login &#8212; Clínica Médica</title>
+    <h:outputStylesheet library="manhattan-layout" name="css/layout-blue-grey.css"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body, .layout-wrapper {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            background: linear-gradient(135deg, #1565C0 0%, #1976D2 50%, #0D47A1 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+        }
+
+        /* impede qualquer div filha do manhattan de atrapalhar */
+        .layout-wrapper > *:not(.login-container) {
+            display: none !important;
+        }
+
+        .login-container {
+            display: block !important;
+            width: 360px !important;
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.28) !important;
+            overflow: hidden !important;
+        }
+
+        /* ── TOPO AZUL ── */
+        .lc-header {
+            background: linear-gradient(135deg, #1976D2, #1565C0);
+            padding: 32px 24px 24px;
+            text-align: center;
+        }
+        .lc-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            margin-bottom: 12px;
+        }
+        .lc-header h2 {
+            margin: 0 0 4px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .lc-header span {
+            font-size: .78rem;
+            color: rgba(255,255,255,0.72);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ── FORMULÁRIO ── */
+        .lc-body {
+            padding: 24px 28px 20px;
+            background: #fff !important;
+        }
+
+        .lc-field {
+            margin-bottom: 16px;
+        }
+        .lc-field .p-outputlabel,
+        .lc-field label {
+            display: block;
+            font-size: .73rem;
+            font-weight: 700;
+            color: #546E7A !important;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 5px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .lc-field .p-inputtext,
+        .lc-field .p-password input {
+            display: block !important;
+            width: 100% !important;
+            background: #F5F7FA !important;
+            border: 1.5px solid #CFD8DC !important;
+            border-radius: 7px !important;
+            padding: 9px 12px !important;
+            font-size: .88rem !important;
+            color: #263238 !important;
+            font-family: 'Segoe UI', sans-serif !important;
+            transition: border-color .15s, box-shadow .15s !important;
+        }
+        .lc-field .p-inputtext:focus,
+        .lc-field .p-password input:focus {
+            border-color: #1976D2 !important;
+            box-shadow: 0 0 0 3px rgba(25,118,210,.12) !important;
+            background: #fff !important;
+            outline: none !important;
+        }
+        .lc-field .p-password {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* ── BOTÃO ── */
+        .lc-btn .p-button {
+            display: flex !important;
+            width: 100% !important;
+            justify-content: center !important;
+            background: #1976D2 !important;
+            border: none !important;
+            border-radius: 7px !important;
+            padding: 10px !important;
+            font-size: .9rem !important;
+            font-weight: 700 !important;
+            margin-top: 4px;
+            transition: background .15s, box-shadow .15s !important;
+        }
+        .lc-btn .p-button:hover {
+            background: #1565C0 !important;
+            box-shadow: 0 4px 12px rgba(25,118,210,.35) !important;
+        }
+
+        /* ── MENSAGENS ── */
+        .p-messages {
+            border-radius: 7px !important;
+            margin-bottom: 14px !important;
+            font-size: .83rem !important;
+        }
+
+        /* ── HINT DEV ── */
+        .lc-hint {
+            margin-top: 14px;
+            padding: 9px 12px;
+            background: #E3F2FD !important;
+            border-left: 3px solid #1976D2;
+            border-radius: 6px;
+            font-size: .77rem;
+            color: #1565C0;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.5;
+        }
+        .lc-hint strong { font-weight: 700; }
+
+        /* ── RODAPÉ ── */
+        .lc-footer {
+            background: #F5F7FA !important;
+            border-top: 1px solid #ECEFF1;
+            padding: 11px 28px;
+            text-align: center;
+            font-size: .72rem;
+            color: #90A4AE;
+            font-family: 'Segoe UI', sans-serif;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="layout-wrapper">
+        <div class="login-container">
+
+            <div class="lc-header">
+                <div class="lc-icon">&#127973;</div>
+                <h2>Clínica Médica</h2>
+                <span>Sistema de Gestão de Consultas</span>
+            </div>
+
+            <div class="lc-body">
+                <h:form>
+                    <p:messages id="msgs" showDetail="true" closable="false"/>
+
+                    <div class="lc-field">
+                        <p:outputLabel for="usuario" value="Usuário"/>
+                        <p:inputText id="usuario"
+                                     value="#{loginController.usuario}"
+                                     placeholder="Digite seu usuário"
+                                     required="true"
+                                     requiredMessage="Informe o usuário."
+                                     autocomplete="username"/>
+                    </div>
+
+                    <div class="lc-field">
+                        <p:outputLabel for="senha" value="Senha"/>
+                        <p:password id="senha"
+                                    value="#{loginController.senha}"
+                                    placeholder="Digite sua senha"
+                                    required="true"
+                                    requiredMessage="Informe a senha."
+                                    feedback="false"
+                                    autocomplete="current-password"/>
+                    </div>
+
+                    <div class="lc-btn">
+                        <p:commandButton value="Entrar"
+                                         icon="pi pi-sign-in"
+                                         iconPos="right"
+                                         action="#{loginController.login}"
+                                         update="msgs"/>
+                    </div>
+
+                    <div class="lc-hint">
+                        &#128274; <strong>Credenciais:</strong>
+                        Usuário: <strong>admin</strong> &#160;|&#160; Senha: <strong>admin</strong>
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="lc-footer">
+                Clínica Médica &#169; 2025 &#8212; Todos os direitos reservados
+            </div>
+
+        </div>
+    </div>
+</h:body>
+</html>

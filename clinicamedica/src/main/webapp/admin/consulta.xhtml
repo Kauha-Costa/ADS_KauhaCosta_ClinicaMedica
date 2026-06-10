@@ -7,84 +7,208 @@
       xmlns:f="jakarta.faces.core">
 
 <ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="pageTitle">
+        <i class="pi pi-calendar" style="color:#1976D2; margin-right:8px;"/>
+        Consultas
+    </ui:define>
+
     <ui:define name="content">
 
-        <p:growl id="growl" showDetail="true"/>
+        <p:growl id="growl" showDetail="true" life="4000"/>
 
-        <p:toolbar>
-            <p:toolbarGroup>
-                <p:commandButton value="Agendar Consulta" icon="pi pi-calendar-plus"
+        <div class="cm-card">
+
+            <div class="cm-card-header">
+                <div class="cm-card-title">
+                    <i class="pi pi-calendar"/>
+                    Consultas Agendadas
+                </div>
+                <p:commandButton value="Agendar Consulta"
+                                 icon="pi pi-calendar-plus"
+                                 styleClass="btn-primary-action"
                                  actionListener="#{consultaController.prepareAdicionar}"
-                                 update="formDialog" oncomplete="PF('dlgConsulta').show()"/>
-            </p:toolbarGroup>
-        </p:toolbar>
+                                 update="formDialog"
+                                 oncomplete="PF('dlgConsulta').show()"/>
+            </div>
 
-        <p:dataTable value="#{consultaController.lista}" var="con"
-                     style="margin-top:1rem" paginator="true" rows="10"
-                     emptyMessage="Nenhuma consulta cadastrada.">
-            <p:column headerText="ID"><h:outputText value="#{con.id}"/></p:column>
-            <p:column headerText="Médico"><h:outputText value="#{con.medico.nome}"/></p:column>
-            <p:column headerText="Paciente"><h:outputText value="#{con.paciente.nome}"/></p:column>
-            <p:column headerText="Data/Hora">
-                <h:outputText value="#{con.datahoraconsulta}">
-                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                </h:outputText>
-            </p:column>
-            <p:column headerText="Status">
-                <p:tag value="#{con.status}"
-                       severity="#{con.status == 'Agendada' ? 'success' : 'danger'}"/>
-            </p:column>
-            <p:column headerText="Ações" style="width:120px; text-align:center">
-                <p:commandButton icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
-                                 title="Cancelar consulta"
-                                 rendered="#{con.status == 'Agendada'}"
-                                 actionListener="#{consultaController.setConsulta(con)}"
-                                 oncomplete="PF('dlgConfirm').show()"/>
-            </p:column>
-        </p:dataTable>
+            <p:dataTable id="tabelaConsulta"
+                         value="#{consultaController.lista}"
+                         var="con"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,20"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         emptyMessage="Nenhuma consulta cadastrada."
+                         stripedRows="true"
+                         rowHover="true"
+                         filterDisplay="row"
+                         sortBy="#{con.datahoraconsulta}"
+                         sortOrder="DESCENDING">
 
-        <p:dialog header="Agendar Consulta" widgetVar="dlgConsulta" modal="true" width="500">
+                <p:column headerText="ID" sortBy="#{con.id}" style="width:60px; text-align:center">
+                    <h:outputText value="#{con.id}"/>
+                </p:column>
+
+                <p:column headerText="M&#233;dico" sortBy="#{con.medico.nome}"
+                          filterBy="#{con.medico.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="width:28px; height:28px; border-radius:50%; background:#E3F2FD;
+                                     display:inline-flex; align-items:center; justify-content:center;
+                                     font-size:.75rem; font-weight:700; color:#1565C0;">
+                            <h:outputText value="#{con.medico.nome.substring(0,1)}"/>
+                        </span>
+                        <h:outputText value="#{con.medico.nome}"/>
+                    </div>
+                </p:column>
+
+                <p:column headerText="Paciente" sortBy="#{con.paciente.nome}"
+                          filterBy="#{con.paciente.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <h:outputText value="#{con.paciente.nome}"/>
+                </p:column>
+
+                <p:column headerText="Data / Hora" sortBy="#{con.datahoraconsulta}" style="width:160px">
+                    <h:outputText value="#{con.datahoraconsulta}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Status" style="width:130px; text-align:center"
+                          filterBy="#{con.status}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <p:tag value="#{con.status}"
+                           severity="#{con.status == 'Agendada' ? 'success' : 'danger'}"/>
+                </p:column>
+
+                <p:column headerText="Observa&#231;&#227;o">
+                    <h:outputText value="#{con.observacao}"/>
+                </p:column>
+
+                <p:column headerText="A&#231;&#245;es" style="width:100px; text-align:center">
+                    <p:commandButton icon="pi pi-ban"
+                                     styleClass="btn-cancel-consult"
+                                     title="Cancelar consulta"
+                                     rendered="#{con.status == 'Agendada'}"
+                                     actionListener="#{consultaController.setConsulta(con)}"
+                                     oncomplete="PF('dlgConfirm').show()"/>
+                </p:column>
+
+            </p:dataTable>
+        </div>
+
+        <!-- ══ DIALOG AGENDAMENTO ══ -->
+        <p:dialog header="Agendar Consulta"
+                  widgetVar="dlgConsulta"
+                  modal="true"
+                  width="520"
+                  resizable="false">
+
             <h:form id="formDialog">
-                <p:messages showDetail="true"/>
-                <p:panelGrid columns="2" style="width:100%">
-                    <p:outputLabel value="Médico *"/>
-                    <p:selectOneMenu value="#{consultaController.consulta.medico}" required="true">
-                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{consultaController.listaMedicos}" var="med"
-                                       itemLabel="#{med.nome}" itemValue="#{med}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel value="Paciente *"/>
-                    <p:selectOneMenu value="#{consultaController.consulta.paciente}" required="true">
-                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{consultaController.listaPacientes}" var="pac"
-                                       itemLabel="#{pac.nome}" itemValue="#{pac}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel value="Data/Hora *"/>
-                    <p:datePicker value="#{consultaController.consulta.datahoraconsulta}"
-                                  pattern="dd/MM/yyyy HH:mm" showTime="true" required="true"/>
-                    <p:outputLabel value="Observação"/>
-                    <p:inputTextarea value="#{consultaController.consulta.observacao}" rows="3"/>
-                </p:panelGrid>
-                <div style="margin-top:1rem; text-align:right">
-                    <p:commandButton value="Agendar" icon="pi pi-check"
+                <p:messages id="dlgMsgs" showDetail="true" closable="true"/>
+
+                <div class="cm-form-grid">
+
+                    <div class="cm-field">
+                        <p:outputLabel for="medico" value="M&#233;dico *"/>
+                        <p:selectOneMenu id="medico"
+                                         value="#{consultaController.consulta.medico}"
+                                         required="true"
+                                         requiredMessage="Selecione o m&#233;dico."
+                                         style="width:100%">
+                            <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{consultaController.listaMedicos}"
+                                           var="med"
+                                           itemLabel="#{med.nome}"
+                                           itemValue="#{med}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="cm-field">
+                        <p:outputLabel for="paciente" value="Paciente *"/>
+                        <p:selectOneMenu id="paciente"
+                                         value="#{consultaController.consulta.paciente}"
+                                         required="true"
+                                         requiredMessage="Selecione o paciente."
+                                         style="width:100%">
+                            <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{consultaController.listaPacientes}"
+                                           var="pac"
+                                           itemLabel="#{pac.nome}"
+                                           itemValue="#{pac}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="cm-field cm-field-full">
+                        <p:outputLabel for="dataHora" value="Data e Hora *"/>
+                        <p:datePicker id="dataHora"
+                                      value="#{consultaController.consulta.datahoraconsulta}"
+                                      pattern="dd/MM/yyyy HH:mm"
+                                      showTime="true"
+                                      hourFormat="24"
+                                      required="true"
+                                      requiredMessage="Informe a data e hora."
+                                      placeholder="dd/mm/aaaa hh:mm"
+                                      showIcon="true"
+                                      style="width:100%"/>
+                    </div>
+
+                    <div class="cm-field cm-field-full">
+                        <p:outputLabel for="obs" value="Observa&#231;&#245;es"/>
+                        <p:inputTextarea id="obs"
+                                         value="#{consultaController.consulta.observacao}"
+                                         rows="3"
+                                         autoResize="false"
+                                         placeholder="Observa&#231;&#245;es sobre a consulta (opcional)"/>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
+                    <p:commandButton value="Cancelar"
+                                     icon="pi pi-times"
+                                     styleClass="p-button-secondary p-button-outlined"
+                                     onclick="PF('dlgConsulta').hide()"
+                                     type="button"/>
+                    <p:commandButton value="Agendar"
+                                     icon="pi pi-check"
+                                     styleClass="btn-primary-action"
                                      actionListener="#{consultaController.salvar('CREATE')}"
-                                     update=":growl" oncomplete="PF('dlgConsulta').hide()"/>
-                    <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="p-button-secondary"
-                                     style="margin-left:4px" onclick="PF('dlgConsulta').hide()" type="button"/>
+                                     update=":growl :tabelaConsulta dlgMsgs"
+                                     oncomplete="handleDlg(xhr, status, args, 'dlgConsulta')"/>
                 </div>
             </h:form>
         </p:dialog>
 
-        <p:confirmDialog widgetVar="dlgConfirm" message="Deseja realmente cancelar esta consulta?"
-                         header="Confirmar Cancelamento" severity="warn">
+        <!-- ══ DIALOG CONFIRMAÇÃO CANCELAMENTO ══ -->
+        <p:confirmDialog widgetVar="dlgConfirm"
+                         message="Deseja realmente cancelar esta consulta?"
+                         header="Confirmar Cancelamento"
+                         severity="warn"
+                         width="400">
             <h:form>
-                <p:commandButton value="Sim" icon="pi pi-check" styleClass="p-button-danger"
+                <p:commandButton value="Sim, cancelar"
+                                 icon="pi pi-ban"
+                                 styleClass="p-button-danger"
                                  actionListener="#{consultaController.cancelar()}"
-                                 update=":growl" oncomplete="PF('dlgConfirm').hide()"/>
-                <p:commandButton value="Não" icon="pi pi-times" styleClass="p-button-secondary"
-                                 onclick="PF('dlgConfirm').hide()" type="button"/>
+                                 update=":growl :tabelaConsulta"
+                                 oncomplete="PF('dlgConfirm').hide()"/>
+                <p:commandButton value="Voltar"
+                                 icon="pi pi-times"
+                                 styleClass="p-button-secondary p-button-outlined"
+                                 style="margin-left:6px"
+                                 onclick="PF('dlgConfirm').hide()"
+                                 type="button"/>
             </h:form>
         </p:confirmDialog>
+
+        <script>
+            //<![CDATA[
+            function handleDlg(xhr, status, args, widgetVar) {
+                if (args && !args.validationFailed) {
+                    PF(widgetVar).hide();
+                }
+            }
+            //]]>
+        </script>
 
     </ui:define>
 </ui:composition>

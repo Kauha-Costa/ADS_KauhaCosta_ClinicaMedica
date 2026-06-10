@@ -7,82 +7,210 @@
       xmlns:f="jakarta.faces.core">
 
 <ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="pageTitle">
+        <i class="pi pi-user-edit" style="color:#1976D2; margin-right:8px;"/>
+        M&#233;dicos
+    </ui:define>
+
     <ui:define name="content">
 
-        <p:growl id="growl" showDetail="true"/>
+        <p:growl id="growl" showDetail="true" life="4000"/>
 
-        <p:toolbar>
-            <p:toolbarGroup>
-                <p:commandButton value="Novo Médico" icon="pi pi-plus"
+        <div class="cm-card">
+
+            <div class="cm-card-header">
+                <div class="cm-card-title">
+                    <i class="pi pi-user-edit"/>
+                    M&#233;dicos Cadastrados
+                </div>
+                <p:commandButton value="Novo M&#233;dico"
+                                 icon="pi pi-plus"
+                                 styleClass="btn-primary-action"
                                  actionListener="#{medicoController.prepareAdicionar}"
-                                 update="formDialog" oncomplete="PF('dlgMedico').show()"/>
-            </p:toolbarGroup>
-        </p:toolbar>
+                                 update="formDialog"
+                                 oncomplete="PF('dlgMedico').show()"/>
+            </div>
 
-        <p:dataTable value="#{medicoController.lista}" var="med"
-                     style="margin-top:1rem" paginator="true" rows="10"
-                     emptyMessage="Nenhum médico cadastrado.">
-            <p:column headerText="ID"><h:outputText value="#{med.id}"/></p:column>
-            <p:column headerText="Nome"><h:outputText value="#{med.nome}"/></p:column>
-            <p:column headerText="CRM"><h:outputText value="#{med.crm}"/></p:column>
-            <p:column headerText="Especialidade"><h:outputText value="#{med.especialidade.nome}"/></p:column>
-            <p:column headerText="Email"><h:outputText value="#{med.email}"/></p:column>
-            <p:column headerText="Telefone"><h:outputText value="#{med.telefone}"/></p:column>
-            <p:column headerText="Ações" style="width:120px; text-align:center">
-                <p:commandButton icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
-                                 style="margin-right:4px"
-                                 actionListener="#{medicoController.setMedico(med)}"
-                                 update="formDialog" oncomplete="PF('dlgMedico').show()"/>
-                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
-                                 actionListener="#{medicoController.setMedico(med)}"
-                                 oncomplete="PF('dlgConfirm').show()"/>
-            </p:column>
-        </p:dataTable>
+            <p:dataTable id="tabelaMedico"
+                         value="#{medicoController.lista}"
+                         var="med"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,20"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         emptyMessage="Nenhum m&#233;dico cadastrado."
+                         stripedRows="true"
+                         rowHover="true"
+                         filterDisplay="row">
 
-        <p:dialog header="Médico" widgetVar="dlgMedico" modal="true" width="500">
+                <p:column headerText="ID" sortBy="#{med.id}" style="width:60px; text-align:center">
+                    <h:outputText value="#{med.id}"/>
+                </p:column>
+
+                <p:column headerText="Nome" sortBy="#{med.nome}"
+                          filterBy="#{med.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <h:outputText value="#{med.nome}"/>
+                </p:column>
+
+                <p:column headerText="CRM" sortBy="#{med.crm}"
+                          filterBy="#{med.crm}" filterMatchMode="contains" filterPlaceholder="Filtrar..."
+                          style="width:120px">
+                    <h:outputText value="#{med.crm}"/>
+                </p:column>
+
+                <p:column headerText="Especialidade" sortBy="#{med.especialidade.nome}"
+                          filterBy="#{med.especialidade.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <p:tag value="#{med.especialidade.nome}"
+                           style="background:#E3F2FD; color:#1565C0; font-size:.75rem;"/>
+                </p:column>
+
+                <p:column headerText="Email" filterBy="#{med.email}"
+                          filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                    <h:outputText value="#{med.email}"/>
+                </p:column>
+
+                <p:column headerText="Telefone" style="width:130px">
+                    <h:outputText value="#{med.telefone}"/>
+                </p:column>
+
+                <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
+                    <p:commandButton icon="pi pi-pencil"
+                                     styleClass="btn-edit"
+                                     title="Editar"
+                                     actionListener="#{medicoController.setMedico(med)}"
+                                     update="formDialog"
+                                     oncomplete="PF('dlgMedico').show()"/>
+                    <p:commandButton icon="pi pi-trash"
+                                     styleClass="btn-delete"
+                                     title="Excluir"
+                                     actionListener="#{medicoController.setMedico(med)}"
+                                     oncomplete="PF('dlgConfirm').show()"/>
+                </p:column>
+
+            </p:dataTable>
+        </div>
+
+        <!-- ══ DIALOG CADASTRO / EDIÇÃO ══ -->
+        <p:dialog header="#{medicoController.medico.id == null ? 'Novo Medico' : 'Editar Medico'}"
+                  widgetVar="dlgMedico"
+                  modal="true"
+                  width="520"
+                  resizable="false">
+
             <h:form id="formDialog">
-                <p:messages showDetail="true"/>
-                <p:panelGrid columns="2" style="width:100%">
-                    <p:outputLabel value="Nome *"/>
-                    <p:inputText value="#{medicoController.medico.nome}" required="true"/>
-                    <p:outputLabel value="CRM *"/>
-                    <p:inputText value="#{medicoController.medico.crm}" required="true"/>
-                    <p:outputLabel value="Especialidade *"/>
-                    <p:selectOneMenu value="#{medicoController.medico.especialidade}" required="true">
-                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{medicoController.listaEspecialidades}" var="esp"
-                                       itemLabel="#{esp.nome}" itemValue="#{esp}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel value="Email"/>
-                    <p:inputText value="#{medicoController.medico.email}"/>
-                    <p:outputLabel value="Telefone"/>
-                    <p:inputText value="#{medicoController.medico.telefone}"/>
-                </p:panelGrid>
-                <div style="margin-top:1rem; text-align:right">
-                    <p:commandButton value="Salvar" icon="pi pi-check"
+                <p:messages id="dlgMsgs" showDetail="true" closable="true"/>
+
+                <div class="cm-form-grid">
+
+                    <div class="cm-field cm-field-full">
+                        <p:outputLabel for="nome" value="Nome completo *"/>
+                        <p:inputText id="nome"
+                                     value="#{medicoController.medico.nome}"
+                                     required="true"
+                                     requiredMessage="Informe o nome."
+                                     maxlength="500"
+                                     placeholder="Nome do m&#233;dico"/>
+                    </div>
+
+                    <div class="cm-field">
+                        <p:outputLabel for="crm" value="CRM *"/>
+                        <p:inputText id="crm"
+                                     value="#{medicoController.medico.crm}"
+                                     required="true"
+                                     requiredMessage="Informe o CRM."
+                                     maxlength="50"
+                                     placeholder="Ex: CRM/RS 12345"/>
+                    </div>
+
+                    <div class="cm-field">
+                        <p:outputLabel for="especialidade" value="Especialidade *"/>
+                        <p:selectOneMenu id="especialidade"
+                                         value="#{medicoController.medico.especialidade}"
+                                         required="true"
+                                         requiredMessage="Selecione a especialidade."
+                                         style="width:100%">
+                            <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{medicoController.listaEspecialidades}"
+                                           var="esp"
+                                           itemLabel="#{esp.nome}"
+                                           itemValue="#{esp}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="cm-field">
+                        <p:outputLabel for="email" value="E-mail"/>
+                        <p:inputText id="email"
+                                     value="#{medicoController.medico.email}"
+                                     maxlength="250"
+                                     placeholder="email@clinica.com"/>
+                    </div>
+
+                    <div class="cm-field">
+                        <p:outputLabel for="telefone" value="Telefone"/>
+                        <p:inputText id="telefone"
+                                     value="#{medicoController.medico.telefone}"
+                                     maxlength="20"
+                                     placeholder="(00) 00000-0000"/>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
+                    <p:commandButton value="Cancelar"
+                                     icon="pi pi-times"
+                                     styleClass="p-button-secondary p-button-outlined"
+                                     onclick="PF('dlgMedico').hide()"
+                                     type="button"/>
+                    <p:commandButton value="Salvar"
+                                     icon="pi pi-check"
+                                     styleClass="btn-primary-action"
                                      actionListener="#{medicoController.salvar('CREATE')}"
                                      rendered="#{medicoController.medico.id == null}"
-                                     update=":growl" oncomplete="PF('dlgMedico').hide()"/>
-                    <p:commandButton value="Atualizar" icon="pi pi-check"
+                                     update=":growl :tabelaMedico dlgMsgs"
+                                     oncomplete="handleDlg(xhr, status, args, 'dlgMedico')"/>
+                    <p:commandButton value="Atualizar"
+                                     icon="pi pi-check"
+                                     styleClass="btn-primary-action"
                                      actionListener="#{medicoController.salvar('UPDATE')}"
                                      rendered="#{medicoController.medico.id != null}"
-                                     update=":growl" oncomplete="PF('dlgMedico').hide()"/>
-                    <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="p-button-secondary"
-                                     style="margin-left:4px" onclick="PF('dlgMedico').hide()" type="button"/>
+                                     update=":growl :tabelaMedico dlgMsgs"
+                                     oncomplete="handleDlg(xhr, status, args, 'dlgMedico')"/>
                 </div>
             </h:form>
         </p:dialog>
 
-        <p:confirmDialog widgetVar="dlgConfirm" message="Deseja realmente excluir este médico?"
-                         header="Confirmar Exclusão" severity="warn">
+        <!-- ══ DIALOG CONFIRMAÇÃO EXCLUSÃO ══ -->
+        <p:confirmDialog widgetVar="dlgConfirm"
+                         message="Deseja realmente excluir este m&#233;dico?"
+                         header="Confirmar Exclus&#227;o"
+                         severity="warn"
+                         width="400">
             <h:form>
-                <p:commandButton value="Sim" icon="pi pi-check" styleClass="p-button-danger"
+                <p:commandButton value="Sim, excluir"
+                                 icon="pi pi-trash"
+                                 styleClass="p-button-danger"
                                  actionListener="#{medicoController.salvar('DELETE')}"
-                                 update=":growl" oncomplete="PF('dlgConfirm').hide()"/>
-                <p:commandButton value="Não" icon="pi pi-times" styleClass="p-button-secondary"
-                                 onclick="PF('dlgConfirm').hide()" type="button"/>
+                                 update=":growl :tabelaMedico"
+                                 oncomplete="PF('dlgConfirm').hide()"/>
+                <p:commandButton value="Cancelar"
+                                 icon="pi pi-times"
+                                 styleClass="p-button-secondary p-button-outlined"
+                                 style="margin-left:6px"
+                                 onclick="PF('dlgConfirm').hide()"
+                                 type="button"/>
             </h:form>
         </p:confirmDialog>
+
+        <script>
+            //<![CDATA[
+            function handleDlg(xhr, status, args, widgetVar) {
+                if (args && !args.validationFailed) {
+                    PF(widgetVar).hide();
+                }
+            }
+            //]]>
+        </script>
 
     </ui:define>
 </ui:composition>
