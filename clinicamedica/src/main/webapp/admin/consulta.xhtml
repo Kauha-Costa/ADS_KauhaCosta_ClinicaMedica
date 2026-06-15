@@ -15,85 +15,89 @@
 
     <ui:define name="content">
 
-        <p:growl id="growl" showDetail="true" life="4000"/>
+        <h:form id="frmList">
 
-        <div class="cm-card">
+            <p:growl id="growl" showDetail="true" life="4000"/>
 
-            <div class="cm-card-header">
-                <div class="cm-card-title">
-                    <i class="pi pi-calendar"/>
-                    Consultas Agendadas
-                </div>
-                <p:commandButton value="Agendar Consulta"
-                                 icon="pi pi-calendar-plus"
-                                 styleClass="btn-primary-action"
-                                 actionListener="#{consultaController.prepareAdicionar}"
-                                 update="formDialog"
-                                 oncomplete="PF('dlgConsulta').show()"/>
-            </div>
+            <div class="cm-card">
 
-            <p:dataTable id="tabelaConsulta"
-                         value="#{consultaController.lista}"
-                         var="con"
-                         paginator="true"
-                         rows="10"
-                         rowsPerPageTemplate="5,10,20"
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         emptyMessage="Nenhuma consulta cadastrada."
-                         stripedRows="true"
-                         rowHover="true"
-                         filterDisplay="row"
-                         sortBy="#{con.datahoraconsulta}"
-                         sortOrder="DESCENDING">
-
-                <p:column headerText="ID" sortBy="#{con.id}" style="width:60px; text-align:center">
-                    <h:outputText value="#{con.id}"/>
-                </p:column>
-
-                <p:column headerText="M&#233;dico" sortBy="#{con.medico.nome}"
-                          filterBy="#{con.medico.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="width:28px; height:28px; border-radius:50%; background:#E3F2FD;
-                                     display:inline-flex; align-items:center; justify-content:center;
-                                     font-size:.75rem; font-weight:700; color:#1565C0;">
-                            <h:outputText value="#{con.medico.nome.substring(0,1)}"/>
-                        </span>
-                        <h:outputText value="#{con.medico.nome}"/>
+                <div class="cm-card-header">
+                    <div class="cm-card-title">
+                        <i class="pi pi-calendar"/>
+                        Consultas Agendadas
                     </div>
-                </p:column>
+                    <p:commandButton value="Agendar Consulta"
+                                     icon="pi pi-calendar-plus"
+                                     styleClass="btn-primary-action"
+                                     actionListener="#{consultaController.prepareAdicionar}"
+                                     update=":formDialog"
+                                     oncomplete="PF('dlgConsulta').show()"/>
+                </div>
 
-                <p:column headerText="Paciente" sortBy="#{con.paciente.nome}"
-                          filterBy="#{con.paciente.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{con.paciente.nome}"/>
-                </p:column>
+                <p:dataTable id="tabelaConsulta"
+                             value="#{consultaController.lista}"
+                             var="con"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="5,10,20"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="Nenhuma consulta cadastrada."
+                             stripedRows="true"
+                             rowHover="true"
+                             filterDisplay="row"
+                             sortBy="#{con.datahoraconsulta}"
+                             sortOrder="DESCENDING">
 
-                <p:column headerText="Data / Hora" sortBy="#{con.datahoraconsulta}" style="width:160px">
-                    <h:outputText value="#{con.datahoraconsulta}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
-                    </h:outputText>
-                </p:column>
+                    <p:column headerText="ID" sortBy="#{con.id}" style="width:60px; text-align:center">
+                        <h:outputText value="#{con.id}"/>
+                    </p:column>
 
-                <p:column headerText="Status" style="width:130px; text-align:center"
-                          filterBy="#{con.status}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <p:tag value="#{con.status}"
-                           severity="#{con.status == 'Agendada' ? 'success' : 'danger'}"/>
-                </p:column>
+                    <p:column headerText="M&#233;dico" sortBy="#{con.medico.nome}"
+                              filterBy="#{con.medico.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="width:28px; height:28px; border-radius:50%; background:#E3F2FD;
+                                         display:inline-flex; align-items:center; justify-content:center;
+                                         font-size:.75rem; font-weight:700; color:#1565C0;">
+                                <h:outputText value="#{con.medico.nome.substring(0,1)}"/>
+                            </span>
+                            <h:outputText value="#{con.medico.nome}"/>
+                        </div>
+                    </p:column>
 
-                <p:column headerText="Observa&#231;&#227;o">
-                    <h:outputText value="#{con.observacao}"/>
-                </p:column>
+                    <p:column headerText="Paciente" sortBy="#{con.paciente.nome}"
+                              filterBy="#{con.paciente.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{con.paciente.nome}"/>
+                    </p:column>
 
-                <p:column headerText="A&#231;&#245;es" style="width:100px; text-align:center">
-                    <p:commandButton icon="pi pi-ban"
-                                     styleClass="btn-cancel-consult"
-                                     title="Cancelar consulta"
-                                     rendered="#{con.status == 'Agendada'}"
-                                     actionListener="#{consultaController.setConsulta(con)}"
-                                     oncomplete="PF('dlgConfirm').show()"/>
-                </p:column>
+                    <p:column headerText="Data / Hora" sortBy="#{con.datahoraconsulta}" style="width:160px">
+                        <h:outputText value="#{con.datahoraconsulta}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </p:column>
 
-            </p:dataTable>
-        </div>
+                    <p:column headerText="Status" style="width:130px; text-align:center"
+                              filterBy="#{con.status}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <p:tag value="#{con.status}"
+                               severity="#{con.status == 'Agendada' ? 'success' : 'danger'}"/>
+                    </p:column>
+
+                    <p:column headerText="Observa&#231;&#227;o">
+                        <h:outputText value="#{con.observacao}"/>
+                    </p:column>
+
+                    <p:column headerText="A&#231;&#245;es" style="width:100px; text-align:center">
+                        <p:commandButton icon="pi pi-ban"
+                                         styleClass="btn-cancel-consult"
+                                         title="Cancelar consulta"
+                                         rendered="#{con.status == 'Agendada'}"
+                                         actionListener="#{consultaController.setConsulta(con)}"
+                                         update=":formConfirm"
+                                         oncomplete="PF('dlgConfirm').show()"/>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </h:form>
 
         <!-- ══ DIALOG AGENDAMENTO ══ -->
         <p:dialog header="Agendar Consulta"
@@ -172,7 +176,7 @@
                                      icon="pi pi-check"
                                      styleClass="btn-primary-action"
                                      actionListener="#{consultaController.salvar('CREATE')}"
-                                     update=":growl :tabelaConsulta dlgMsgs"
+                                     update=":frmList:growl :frmList:tabelaConsulta dlgMsgs"
                                      oncomplete="handleDlg(xhr, status, args, 'dlgConsulta')"/>
                 </div>
             </h:form>
@@ -184,12 +188,12 @@
                          header="Confirmar Cancelamento"
                          severity="warn"
                          width="400">
-            <h:form>
+            <h:form id="formConfirm">
                 <p:commandButton value="Sim, cancelar"
                                  icon="pi pi-ban"
                                  styleClass="p-button-danger"
                                  actionListener="#{consultaController.cancelar()}"
-                                 update=":growl :tabelaConsulta"
+                                 update=":frmList:growl :frmList:tabelaConsulta"
                                  oncomplete="PF('dlgConfirm').hide()"/>
                 <p:commandButton value="Voltar"
                                  icon="pi pi-times"

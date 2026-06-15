@@ -40,6 +40,8 @@ public class ConsultaController implements Serializable {
     public void prepareAdicionar() {
         consulta = new ConsultaEntity();
         consulta.setStatus("Agendada");
+        listaMedicos = null;    // força recarregar
+        listaPacientes = null;  // força recarregar
     }
 
     public void salvar(PersistAction action) {
@@ -98,7 +100,12 @@ public class ConsultaController implements Serializable {
     }
 
     public ConsultaEntity getConsulta() { return consulta; }
-    public void setConsulta(ConsultaEntity consulta) { this.consulta = consulta; }
+    
+    public void setConsulta(ConsultaEntity consulta) { 
+        this.consulta = consulta;
+        listaMedicos = null;    // força recarregar
+        listaPacientes = null;  // força recarregar
+    }
 
     private void addMessage(String msg, FacesMessage.Severity severity) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, msg, null));

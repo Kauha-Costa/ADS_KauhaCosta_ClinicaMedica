@@ -1,5 +1,8 @@
 package br.upf.clinicamedica.controller;
 
+import br.upf.clinicamedica.entity.UsuarioEntity;
+import br.upf.clinicamedica.facade.UsuarioFacade;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -11,15 +14,18 @@ import java.io.Serializable;
 @SessionScoped
 public class LoginController implements Serializable {
 
+    @EJB
+    private UsuarioFacade usuarioFacade;
+
     private String usuario;
     private String senha;
 
     public String login() {
-        // usuário fixo para desenvolvimento — pode trocar depois
-        if ("admin".equals(usuario) && "admin".equals(senha)) {
+        UsuarioEntity u = usuarioFacade.buscarPorUsuarioESenha(usuario, senha);
+        if (u != null) {
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                     .getExternalContext().getSession(true);
-            session.setAttribute("usuarioLogado", usuario);
+            session.setAttribute("usuarioLogado", u.getUsuario());
             return "/admin/medico?faces-redirect=true";
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -32,9 +38,7 @@ public class LoginController implements Serializable {
     public String logout() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        if (session != null) session.invalidate();
         return "/login?faces-redirect=true";
     }
 

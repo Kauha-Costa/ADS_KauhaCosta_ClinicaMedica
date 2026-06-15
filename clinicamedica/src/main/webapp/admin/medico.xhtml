@@ -15,81 +15,85 @@
 
     <ui:define name="content">
 
-        <p:growl id="growl" showDetail="true" life="4000"/>
+        <h:form id="frmList">
 
-        <div class="cm-card">
+            <p:growl id="growl" showDetail="true" life="4000"/>
 
-            <div class="cm-card-header">
-                <div class="cm-card-title">
-                    <i class="pi pi-user-edit"/>
-                    M&#233;dicos Cadastrados
-                </div>
-                <p:commandButton value="Novo M&#233;dico"
-                                 icon="pi pi-plus"
-                                 styleClass="btn-primary-action"
-                                 actionListener="#{medicoController.prepareAdicionar}"
-                                 update="formDialog"
-                                 oncomplete="PF('dlgMedico').show()"/>
-            </div>
+            <div class="cm-card">
 
-            <p:dataTable id="tabelaMedico"
-                         value="#{medicoController.lista}"
-                         var="med"
-                         paginator="true"
-                         rows="10"
-                         rowsPerPageTemplate="5,10,20"
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         emptyMessage="Nenhum m&#233;dico cadastrado."
-                         stripedRows="true"
-                         rowHover="true"
-                         filterDisplay="row">
-
-                <p:column headerText="ID" sortBy="#{med.id}" style="width:60px; text-align:center">
-                    <h:outputText value="#{med.id}"/>
-                </p:column>
-
-                <p:column headerText="Nome" sortBy="#{med.nome}"
-                          filterBy="#{med.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{med.nome}"/>
-                </p:column>
-
-                <p:column headerText="CRM" sortBy="#{med.crm}"
-                          filterBy="#{med.crm}" filterMatchMode="contains" filterPlaceholder="Filtrar..."
-                          style="width:120px">
-                    <h:outputText value="#{med.crm}"/>
-                </p:column>
-
-                <p:column headerText="Especialidade" sortBy="#{med.especialidade.nome}"
-                          filterBy="#{med.especialidade.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <p:tag value="#{med.especialidade.nome}"
-                           style="background:#E3F2FD; color:#1565C0; font-size:.75rem;"/>
-                </p:column>
-
-                <p:column headerText="Email" filterBy="#{med.email}"
-                          filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{med.email}"/>
-                </p:column>
-
-                <p:column headerText="Telefone" style="width:130px">
-                    <h:outputText value="#{med.telefone}"/>
-                </p:column>
-
-                <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
-                    <p:commandButton icon="pi pi-pencil"
-                                     styleClass="btn-edit"
-                                     title="Editar"
-                                     actionListener="#{medicoController.setMedico(med)}"
-                                     update="formDialog"
+                <div class="cm-card-header">
+                    <div class="cm-card-title">
+                        <i class="pi pi-user-edit"/>
+                        M&#233;dicos Cadastrados
+                    </div>
+                    <p:commandButton value="Novo M&#233;dico"
+                                     icon="pi pi-plus"
+                                     styleClass="btn-primary-action"
+                                     actionListener="#{medicoController.prepareAdicionar}"
+                                     update=":formDialog"
                                      oncomplete="PF('dlgMedico').show()"/>
-                    <p:commandButton icon="pi pi-trash"
-                                     styleClass="btn-delete"
-                                     title="Excluir"
-                                     actionListener="#{medicoController.setMedico(med)}"
-                                     oncomplete="PF('dlgConfirm').show()"/>
-                </p:column>
+                </div>
 
-            </p:dataTable>
-        </div>
+                <p:dataTable id="tabelaMedico"
+                             value="#{medicoController.lista}"
+                             var="med"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="5,10,20"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="Nenhum m&#233;dico cadastrado."
+                             stripedRows="true"
+                             rowHover="true"
+                             filterDisplay="row">
+
+                    <p:column headerText="ID" sortBy="#{med.id}" style="width:60px; text-align:center">
+                        <h:outputText value="#{med.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Nome" sortBy="#{med.nome}"
+                              filterBy="#{med.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{med.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="CRM" sortBy="#{med.crm}"
+                              filterBy="#{med.crm}" filterMatchMode="contains" filterPlaceholder="Filtrar..."
+                              style="width:120px">
+                        <h:outputText value="#{med.crm}"/>
+                    </p:column>
+
+                    <p:column headerText="Especialidade" sortBy="#{med.especialidade.nome}"
+                              filterBy="#{med.especialidade.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <p:tag value="#{med.especialidade.nome}"
+                               style="background:#E3F2FD; color:#1565C0; font-size:.75rem;"/>
+                    </p:column>
+
+                    <p:column headerText="Email" filterBy="#{med.email}"
+                              filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{med.email}"/>
+                    </p:column>
+
+                    <p:column headerText="Telefone" style="width:130px">
+                        <h:outputText value="#{med.telefone}"/>
+                    </p:column>
+
+                    <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
+                        <p:commandButton icon="pi pi-pencil"
+                                         styleClass="btn-edit"
+                                         title="Editar"
+                                         actionListener="#{medicoController.setMedico(med)}"
+                                         update=":formDialog"
+                                         oncomplete="PF('dlgMedico').show()"/>
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="btn-delete"
+                                         title="Excluir"
+                                         actionListener="#{medicoController.setMedico(med)}"
+                                         update=":formConfirm"
+                                         oncomplete="PF('dlgConfirm').show()"/>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </h:form>
 
         <!-- ══ DIALOG CADASTRO / EDIÇÃO ══ -->
         <p:dialog header="#{medicoController.medico.id == null ? 'Novo Medico' : 'Editar Medico'}"
@@ -167,14 +171,14 @@
                                      styleClass="btn-primary-action"
                                      actionListener="#{medicoController.salvar('CREATE')}"
                                      rendered="#{medicoController.medico.id == null}"
-                                     update=":growl :tabelaMedico dlgMsgs"
+                                     update=":frmList:growl :frmList:tabelaMedico dlgMsgs"
                                      oncomplete="handleDlg(xhr, status, args, 'dlgMedico')"/>
                     <p:commandButton value="Atualizar"
                                      icon="pi pi-check"
                                      styleClass="btn-primary-action"
                                      actionListener="#{medicoController.salvar('UPDATE')}"
                                      rendered="#{medicoController.medico.id != null}"
-                                     update=":growl :tabelaMedico dlgMsgs"
+                                     update=":frmList:growl :frmList:tabelaMedico dlgMsgs"
                                      oncomplete="handleDlg(xhr, status, args, 'dlgMedico')"/>
                 </div>
             </h:form>
@@ -186,12 +190,12 @@
                          header="Confirmar Exclus&#227;o"
                          severity="warn"
                          width="400">
-            <h:form>
+            <h:form id="formConfirm">
                 <p:commandButton value="Sim, excluir"
                                  icon="pi pi-trash"
                                  styleClass="p-button-danger"
                                  actionListener="#{medicoController.salvar('DELETE')}"
-                                 update=":growl :tabelaMedico"
+                                 update=":frmList:growl :frmList:tabelaMedico"
                                  oncomplete="PF('dlgConfirm').hide()"/>
                 <p:commandButton value="Cancelar"
                                  icon="pi pi-times"

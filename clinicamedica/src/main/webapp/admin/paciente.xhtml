@@ -15,80 +15,84 @@
 
     <ui:define name="content">
 
-        <p:growl id="growl" showDetail="true" life="4000"/>
+        <h:form id="frmList">
 
-        <div class="cm-card">
+            <p:growl id="growl" showDetail="true" life="4000"/>
 
-            <div class="cm-card-header">
-                <div class="cm-card-title">
-                    <i class="pi pi-users"/>
-                    Pacientes Cadastrados
-                </div>
-                <p:commandButton value="Novo Paciente"
-                                 icon="pi pi-plus"
-                                 styleClass="btn-primary-action"
-                                 actionListener="#{pacienteController.prepareAdicionar}"
-                                 update="formDialog"
-                                 oncomplete="PF('dlgPaciente').show()"/>
-            </div>
+            <div class="cm-card">
 
-            <p:dataTable id="tabelaPaciente"
-                         value="#{pacienteController.lista}"
-                         var="pac"
-                         paginator="true"
-                         rows="10"
-                         rowsPerPageTemplate="5,10,20"
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         emptyMessage="Nenhum paciente cadastrado."
-                         stripedRows="true"
-                         rowHover="true"
-                         filterDisplay="row">
-
-                <p:column headerText="ID" sortBy="#{pac.id}" style="width:60px; text-align:center">
-                    <h:outputText value="#{pac.id}"/>
-                </p:column>
-
-                <p:column headerText="Nome" sortBy="#{pac.nome}"
-                          filterBy="#{pac.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{pac.nome}"/>
-                </p:column>
-
-                <p:column headerText="CPF" style="width:130px"
-                          filterBy="#{pac.cpf}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{pac.cpf}"/>
-                </p:column>
-
-                <p:column headerText="Nascimento" sortBy="#{pac.datanascimento}" style="width:130px">
-                    <h:outputText value="#{pac.datanascimento}">
-                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
-                    </h:outputText>
-                </p:column>
-
-                <p:column headerText="Telefone" style="width:130px">
-                    <h:outputText value="#{pac.telefone}"/>
-                </p:column>
-
-                <p:column headerText="Conv&#234;nio"
-                          filterBy="#{pac.convenio}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                    <h:outputText value="#{pac.convenio}"/>
-                </p:column>
-
-                <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
-                    <p:commandButton icon="pi pi-pencil"
-                                     styleClass="btn-edit"
-                                     title="Editar"
-                                     actionListener="#{pacienteController.setPaciente(pac)}"
-                                     update="formDialog"
+                <div class="cm-card-header">
+                    <div class="cm-card-title">
+                        <i class="pi pi-users"/>
+                        Pacientes Cadastrados
+                    </div>
+                    <p:commandButton value="Novo Paciente"
+                                     icon="pi pi-plus"
+                                     styleClass="btn-primary-action"
+                                     actionListener="#{pacienteController.prepareAdicionar}"
+                                     update=":formDialog"
                                      oncomplete="PF('dlgPaciente').show()"/>
-                    <p:commandButton icon="pi pi-trash"
-                                     styleClass="btn-delete"
-                                     title="Excluir"
-                                     actionListener="#{pacienteController.setPaciente(pac)}"
-                                     oncomplete="PF('dlgConfirm').show()"/>
-                </p:column>
+                </div>
 
-            </p:dataTable>
-        </div>
+                <p:dataTable id="tabelaPaciente"
+                             value="#{pacienteController.lista}"
+                             var="pac"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="5,10,20"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="Nenhum paciente cadastrado."
+                             stripedRows="true"
+                             rowHover="true"
+                             filterDisplay="row">
+
+                    <p:column headerText="ID" sortBy="#{pac.id}" style="width:60px; text-align:center">
+                        <h:outputText value="#{pac.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Nome" sortBy="#{pac.nome}"
+                              filterBy="#{pac.nome}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{pac.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="CPF" style="width:130px"
+                              filterBy="#{pac.cpf}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{pac.cpf}"/>
+                    </p:column>
+
+                    <p:column headerText="Nascimento" sortBy="#{pac.datanascimento}" style="width:130px">
+                        <h:outputText value="#{pac.datanascimento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Telefone" style="width:130px">
+                        <h:outputText value="#{pac.telefone}"/>
+                    </p:column>
+
+                    <p:column headerText="Conv&#234;nio"
+                              filterBy="#{pac.convenio}" filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                        <h:outputText value="#{pac.convenio}"/>
+                    </p:column>
+
+                    <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
+                        <p:commandButton icon="pi pi-pencil"
+                                         styleClass="btn-edit"
+                                         title="Editar"
+                                         actionListener="#{pacienteController.setPaciente(pac)}"
+                                         update=":formDialog"
+                                         oncomplete="PF('dlgPaciente').show()"/>
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="btn-delete"
+                                         title="Excluir"
+                                         actionListener="#{pacienteController.setPaciente(pac)}"
+                                         update=":formConfirm"
+                                         oncomplete="PF('dlgConfirm').show()"/>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </h:form>
 
         <!-- ══ DIALOG CADASTRO / EDIÇÃO ══ -->
         <p:dialog header="#{pacienteController.paciente.id == null ? 'Novo Paciente' : 'Editar Paciente'}"
@@ -167,14 +171,14 @@
                                      styleClass="btn-primary-action"
                                      actionListener="#{pacienteController.salvar('CREATE')}"
                                      rendered="#{pacienteController.paciente.id == null}"
-                                     update=":growl :tabelaPaciente dlgMsgs"
+                                     update=":frmList:growl :frmList:tabelaPaciente dlgMsgs"
                                      oncomplete="handleDlg(xhr, status, args, 'dlgPaciente')"/>
                     <p:commandButton value="Atualizar"
                                      icon="pi pi-check"
                                      styleClass="btn-primary-action"
                                      actionListener="#{pacienteController.salvar('UPDATE')}"
                                      rendered="#{pacienteController.paciente.id != null}"
-                                     update=":growl :tabelaPaciente dlgMsgs"
+                                     update=":frmList:growl :frmList:tabelaPaciente dlgMsgs"
                                      oncomplete="handleDlg(xhr, status, args, 'dlgPaciente')"/>
                 </div>
             </h:form>
@@ -186,12 +190,12 @@
                          header="Confirmar Exclus&#227;o"
                          severity="warn"
                          width="400">
-            <h:form>
+            <h:form id="formConfirm">
                 <p:commandButton value="Sim, excluir"
                                  icon="pi pi-trash"
                                  styleClass="p-button-danger"
                                  actionListener="#{pacienteController.salvar('DELETE')}"
-                                 update=":growl :tabelaPaciente"
+                                 update=":frmList:growl :frmList:tabelaPaciente"
                                  oncomplete="PF('dlgConfirm').hide()"/>
                 <p:commandButton value="Cancelar"
                                  icon="pi pi-times"

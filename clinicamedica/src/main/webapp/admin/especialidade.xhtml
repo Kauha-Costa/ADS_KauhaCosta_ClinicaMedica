@@ -15,67 +15,71 @@
 
         <ui:define name="content">
 
-            <p:growl id="growl" showDetail="true" life="4000"/>
+            <h:form id="frmList">
 
-            <div class="cm-card">
+                <p:growl id="growl" showDetail="true" life="4000"/>
 
-                <!-- Cabeçalho -->
-                <div class="cm-card-header">
-                    <div class="cm-card-title">
-                        <i class="pi pi-th-large"/>
-                        Especialidades Cadastradas
-                    </div>
-                    <p:commandButton value="Nova Especialidade"
-                                     icon="pi pi-plus"
-                                     styleClass="btn-primary-action"
-                                     actionListener="#{especialidadeController.prepareAdicionar}"
-                                     update="formDialog"
-                                     oncomplete="PF('dlgEspecialidade').show()"/>
-                </div>
+                <div class="cm-card">
 
-                <!-- Tabela -->
-                <p:dataTable id="tabelaEspecialidade"
-                             value="#{especialidadeController.lista}"
-                             var="esp"
-                             paginator="true"
-                             rows="10"
-                             rowsPerPageTemplate="5,10,20"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             emptyMessage="Nenhuma especialidade cadastrada."
-                             stripedRows="true"
-                             rowHover="true"
-                             filterDisplay="row">
-
-                    <p:column headerText="ID" sortBy="#{esp.id}" style="width:70px; text-align:center">
-                        <h:outputText value="#{esp.id}"/>
-                    </p:column>
-
-                    <p:column headerText="Nome" sortBy="#{esp.nome}" filterBy="#{esp.nome}"
-                              filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                        <h:outputText value="#{esp.nome}"/>
-                    </p:column>
-
-                    <p:column headerText="Descri&#231;&#227;o" filterBy="#{esp.descricao}"
-                              filterMatchMode="contains" filterPlaceholder="Filtrar...">
-                        <h:outputText value="#{esp.descricao}"/>
-                    </p:column>
-
-                    <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
-                        <p:commandButton icon="pi pi-pencil"
-                                         styleClass="btn-edit"
-                                         title="Editar"
-                                         actionListener="#{especialidadeController.setEspecialidade(esp)}"
-                                         update="formDialog"
+                    <!-- Cabeçalho -->
+                    <div class="cm-card-header">
+                        <div class="cm-card-title">
+                            <i class="pi pi-th-large"/>
+                            Especialidades Cadastradas
+                        </div>
+                        <p:commandButton value="Nova Especialidade"
+                                         icon="pi pi-plus"
+                                         styleClass="btn-primary-action"
+                                         actionListener="#{especialidadeController.prepareAdicionar}"
+                                         update=":formDialog"
                                          oncomplete="PF('dlgEspecialidade').show()"/>
-                        <p:commandButton icon="pi pi-trash"
-                                         styleClass="btn-delete"
-                                         title="Excluir"
-                                         actionListener="#{especialidadeController.setEspecialidade(esp)}"
-                                         oncomplete="PF('dlgConfirm').show()"/>
-                    </p:column>
+                    </div>
 
-                </p:dataTable>
-            </div>
+                    <!-- Tabela -->
+                    <p:dataTable id="tabelaEspecialidade"
+                                 value="#{especialidadeController.lista}"
+                                 var="esp"
+                                 paginator="true"
+                                 rows="10"
+                                 rowsPerPageTemplate="5,10,20"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 emptyMessage="Nenhuma especialidade cadastrada."
+                                 stripedRows="true"
+                                 rowHover="true"
+                                 filterDisplay="row">
+
+                        <p:column headerText="ID" sortBy="#{esp.id}" style="width:70px; text-align:center">
+                            <h:outputText value="#{esp.id}"/>
+                        </p:column>
+
+                        <p:column headerText="Nome" sortBy="#{esp.nome}" filterBy="#{esp.nome}"
+                                  filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                            <h:outputText value="#{esp.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="Descri&#231;&#227;o" filterBy="#{esp.descricao}"
+                                  filterMatchMode="contains" filterPlaceholder="Filtrar...">
+                            <h:outputText value="#{esp.descricao}"/>
+                        </p:column>
+
+                        <p:column headerText="A&#231;&#245;es" style="width:110px; text-align:center">
+                            <p:commandButton icon="pi pi-pencil"
+                                             styleClass="btn-edit"
+                                             title="Editar"
+                                             actionListener="#{especialidadeController.setEspecialidade(esp)}"
+                                             update=":formDialog"
+                                             oncomplete="PF('dlgEspecialidade').show()"/>
+                            <p:commandButton icon="pi pi-trash"
+                                             styleClass="btn-delete"
+                                             title="Excluir"
+                                             actionListener="#{especialidadeController.setEspecialidade(esp)}"
+                                             update=":formConfirm"
+                                             oncomplete="PF('dlgConfirm').show()"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </h:form>
 
             <!-- ══ DIALOG CADASTRO / EDIÇÃO ══ -->
             <p:dialog header="#{especialidadeController.especialidade.id == null ? 'Nova Especialidade' : 'Editar Especialidade'}"
@@ -122,14 +126,14 @@
                                          styleClass="btn-primary-action"
                                          actionListener="#{especialidadeController.salvar('CREATE')}"
                                          rendered="#{especialidadeController.especialidade.id == null}"
-                                         update=":growl :tabelaEspecialidade dlgMsgs"
+                                         update=":frmList:growl :frmList:tabelaEspecialidade dlgMsgs"
                                          oncomplete="handleDlg(xhr, status, args, 'dlgEspecialidade')"/>
                         <p:commandButton value="Atualizar"
                                          icon="pi pi-check"
                                          styleClass="btn-primary-action"
                                          actionListener="#{especialidadeController.salvar('UPDATE')}"
                                          rendered="#{especialidadeController.especialidade.id != null}"
-                                         update=":growl :tabelaEspecialidade dlgMsgs"
+                                         update=":frmList:growl :frmList:tabelaEspecialidade dlgMsgs"
                                          oncomplete="handleDlg(xhr, status, args, 'dlgEspecialidade')"/>
                     </div>
                 </h:form>
@@ -141,12 +145,12 @@
                              header="Confirmar Exclus&#227;o"
                              severity="warn"
                              width="400">
-                <h:form>
+                <h:form id="formConfirm">
                     <p:commandButton value="Sim, excluir"
                                      icon="pi pi-trash"
                                      styleClass="p-button-danger"
                                      actionListener="#{especialidadeController.salvar('DELETE')}"
-                                     update=":growl :tabelaEspecialidade"
+                                     update=":frmList:growl :frmList:tabelaEspecialidade"
                                      oncomplete="PF('dlgConfirm').hide()"/>
                     <p:commandButton value="Cancelar"
                                      icon="pi pi-times"
