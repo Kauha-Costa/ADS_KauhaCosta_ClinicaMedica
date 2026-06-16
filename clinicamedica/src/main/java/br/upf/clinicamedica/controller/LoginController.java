@@ -26,7 +26,7 @@ public class LoginController implements Serializable {
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                     .getExternalContext().getSession(true);
             session.setAttribute("usuarioLogado", u.getUsuario());
-            return "/admin/medico?faces-redirect=true";
+            return "/admin/dashboard?faces-redirect=true";
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR,
